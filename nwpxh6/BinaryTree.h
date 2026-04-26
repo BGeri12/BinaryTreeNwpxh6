@@ -103,5 +103,17 @@ private:
 		}
 	}
 
+	Node* CopyTree(const Node* other)
+	{
+		if (other == nullptr)
+			return nullptr;
+
+		Node* newNode = new Node(other->key);
+		newNode->value = other->value;
+		newNode->left = CopyTree(other->left);
+		newNode->right = CopyTree(other->right);
+		return newNode;
+	}
+
 };
 
