@@ -107,6 +107,12 @@ public:
 		return root == nullptr;
 	}
 
+	void clear()
+	{
+		DestroyTree(root);
+		root = nullptr;
+	}
+
 
 
 private:
