@@ -38,6 +38,13 @@ public:
 		return *this;
 	}
 
+	BinaryTree(BinaryTree&& other) noexcept : root(other.root)
+	{
+		other.root = nullptr;
+	}
+
+
+
 	Value& operator[](const Key& k)
 	{
 		if (root == nullptr)
