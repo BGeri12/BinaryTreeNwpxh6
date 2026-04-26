@@ -102,15 +102,60 @@ public:
 		throw KeyNotFoundException();
 	}
 
-	bool empty() const
+	bool Empty() const
 	{
 		return root == nullptr;
 	}
 
-	void clear()
+	void Clear()
 	{
 		DestroyTree(root);
 		root = nullptr;
+	}
+
+	bool Contains(const Key& k) const
+	{
+		Node* current = root;
+		while (current != nullptr)
+		{
+			if (k == current->key)
+				return true;
+			if (k < current->key)
+				current = current->left;
+			else
+				current = current->right;
+		}
+		return false;
+	}
+
+	bool Insert(const K& key, const V& value) {
+		
+		if (root == nullptr) {
+			root = new Node(key);
+			root->value = value;
+			return true;
+		}
+
+		Node* current = root;
+		Node* parent = nullptr;
+
+		while (current != nullptr) {
+			if (key == current->key) 
+				return false; 
+
+			parent = current;
+			if (key < current->key)
+				current = current->left;
+			else 
+				current = current->right;
+		}
+
+		Node* newNode = new Node(key);
+		newNode->value = value;
+		if (key < parent->key) parent->left = newNode;
+		else parent->right = newNode;
+
+		return true;
 	}
 
 
