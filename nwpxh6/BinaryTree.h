@@ -69,6 +69,13 @@ public:
 		throw KeyNotFoundException();
 	}
 
+	bool empty() const
+	{
+		return root == nullptr;
+	}
+
+
+
 private:
 	struct Node
 	{
