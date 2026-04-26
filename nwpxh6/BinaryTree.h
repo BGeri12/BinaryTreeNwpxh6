@@ -26,6 +26,18 @@ public:
 		DestroyTree(root);
 	}
 
+	BinaryTree(const BinaryTree& other) : root{CopyTree(other.root)} {}
+
+	BinaryTree& operator=(const BinaryTree& other)
+	{
+		if (this != &other)
+		{
+			DestroyTree(root);
+			root = CopyTree(other.root);
+		}
+		return *this;
+	}
+
 	Value& operator[](const Key& k)
 	{
 		if (root == nullptr)
