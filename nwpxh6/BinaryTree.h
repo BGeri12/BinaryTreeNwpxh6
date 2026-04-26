@@ -38,12 +38,22 @@ public:
 		return *this;
 	}
 
-	BinaryTree(BinaryTree&& other) noexcept : root(other.root)
+	BinaryTree(BinaryTree&& other) noexcept
+	: root(other.root)
 	{
 		other.root = nullptr;
 	}
 
-
+	BinaryTree& operator=(BinaryTree&& other) noexcept
+	{
+		if (this != &other)
+		{
+			DestroyTree(root);
+			root = other.root;
+			other.root = nullptr;
+		}
+		return *this;
+	}
 
 	Value& operator[](const Key& k)
 	{
