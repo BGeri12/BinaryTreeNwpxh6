@@ -88,5 +88,15 @@ private:
 	};
 
 	Node* root;
+
+	void PostOrder(Node* node)
+	{
+		if (node != nullptr)
+		{
+			PostOrder(node->left);
+			PostOrder(node->right);
+			delete node;
+		}
+	}
 };
 
