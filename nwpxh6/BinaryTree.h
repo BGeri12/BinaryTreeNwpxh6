@@ -22,6 +22,10 @@ public:
 
 	BinaryTree() : root(nullptr) {}
 
+	~BinaryTree() {
+		DestroyTree(root);
+	}
+
 	Value& operator[](const Key& k)
 	{
 		if (root == nullptr)
@@ -89,14 +93,15 @@ private:
 
 	Node* root;
 
-	void PostOrder(Node* node)
+	void DestroyTree(Node* node)
 	{
 		if (node != nullptr)
 		{
-			PostOrder(node->left);
-			PostOrder(node->right);
+			DestroyTree(node->left);
+			DestroyTree(node->right);
 			delete node;
 		}
 	}
+
 };
 
