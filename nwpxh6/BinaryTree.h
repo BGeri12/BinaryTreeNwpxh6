@@ -1,7 +1,8 @@
 #pragma once
 #include <exception>
 
-class KeyNotFoundException : public std::exception {
+class KeyNotFoundException : public std::exception
+{
 public:
 	const char* what() const noexcept override {
 		return "Error: Key not found in the binary tree !";
@@ -90,7 +91,7 @@ public:
 
 	bool Remove(const Key& k) {
 		bool success = false;
-		root = RemoveNode(root, k, success);
+		root = RemoveNodeHelper(root, k, success);
 		return success;
 	}
 
@@ -143,15 +144,15 @@ private:
 	Node* FindNodeHelper(const Key& k) const
 	{
 		Node* current = root;
-		while (corrent != nullptr)
+		while (current != nullptr)
 		{
-			if (k == corrent->key)
-				return corrent;
+			if (k == current->key)
+				return current;
 
-			if (k < corrent->key)
-				corrent = corrent->left;
+			if (k < current->key)
+				current = current->left;
 			else
-				corrent = corrent->right;
+				current = current->right;
 		}
 		return nullptr;
 	}
@@ -183,45 +184,49 @@ private:
 		}
 
 		Node* newNode = new Node(k);
-		if (k < perent->key)
-			perent->left = newNode;
+		if (k < parent->key)
+			parent->left = newNode;
 		else
-			perent->right = newNode;
+			parent->right = newNode;
 
 		wasInserted = true;
 		return newNode;
 	}
 
-	Node* RemoveNode(Node* node, const Key& k, bool& success) {
+	Node* RemoveNodeHelper(Node* node, const Key& k, bool& success) {
 		if (node == nullptr)
 			return nullptr;
 
 		if (k < node->key) {
-			node->left = RemoveNode(node->left, k, success);
+			node->left = RemoveNodeHelper(node->left, k, success);
 		}
 		else if (k > node->key) {
-			node->right = RemoveNode(node->right, k, success);
+			node->right = RemoveNodeHelper(node->right, k, success);
 		}
-		else {
+		else
+		{
 			success = true;
 
-			if (node->left == nullptr) {
+			if (node->left == nullptr)
+			{
 				Node* temp = node->right;
 				delete node;
 				return temp;
 			}
-			else if (node->right == nullptr) {
+			else if (node->right == nullptr)
+			{
 				Node* temp = node->left;
 				delete node;
 				return temp;
 			}
 			Node* temp = node->right;
-			while (temp->left != nullptr) {
+			while (temp->left != nullptr)
+			{
 				temp = temp->left;
 			}
 			node->key = temp->key;    
 			node->value = temp->value;
-			node->right = RemoveNode(node->right, temp->key, success);
+			node->right = RemoveNodeHelper(node->right, temp->key, success);
 		}
 		return node;
 	}
