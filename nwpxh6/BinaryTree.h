@@ -20,11 +20,9 @@ public:
 	//BinaryTree(BinaryTree&& other) = default;
 	//BinaryTree& operator=(BinaryTree&& other) = default;
 
-	BinaryTree() : root(nullptr) {}
+	BinaryTree(): root(nullptr) {}
 
-	~BinaryTree() {
-		DestroyTree(root);
-	}
+	~BinaryTree(){ DestroyTree(root);}
 
 	BinaryTree(const BinaryTree& other) : root{CopyTree(other.root)} {}
 
@@ -55,51 +53,45 @@ public:
 		return *this;
 	}
 
-	Value& operator[](const Key& k)
-	{
-		if (root == nullptr)
-		{
-			root = new Node(k);
-			return root->value;
-		}
-
-		Node* current = root;
-		Node* parent = nullptr;
-
-		while (current != nullptr)
-		{
-			if (k == current->key)
-				return current->value;
-
-			parent = current;
-			if (k < current->key)
-				current = current->left;
-			else
-				current = current->right;
-		}
-
-		Node* newNode = new Node(k);
-		if (k < parent->key)
-			parent->left = newNode;
-		else
-			parent->right = newNode;
-
-		return newNode->value;
-	}
-
 	const Value& operator[](const Key& k) const
 	{
-		Node* current = root;
-		while (current != nullptr)
-		{
-			if (k == current->key)
-				return current->value;
-			if (k < current->key)
-				current = current->left;
-			else
-				current = current->right;
-		}
+		Node* node = FindNodeHelper(k);
+		
+		if (node != nullptr)
+			return node->value;
+
 		throw KeyNotFoundException();
+	}
+
+	bool Contains(const Key& k) const
+	{
+		return FindNodeHelper(k) != nullptr;
+	}
+
+	Value& operator[](const Key& k)
+	{
+		bool wasInserted;
+		Node* node = InsertNodeHelper(k, wasInserted);
+		return node->value;
+	}
+
+	bool Insert(const Key& k, const Value& v)
+	{
+		bool wasInserted;
+		Node* node = InsertNodeHelper(k, wasInserted);
+		if (wasInserted)
+		{
+			node->value = v;
+			return true;
+		}
+
+		return false;
+	}
+
+	bool Remove(const Key& k) {
+		bool success = false;
+		root = RemoveNode(root, k, success);
+		return success;
 	}
 
 	bool Empty() const
@@ -111,57 +103,6 @@ public:
 	{
 		DestroyTree(root);
 		root = nullptr;
-	}
-
-	bool Contains(const Key& k) const
-	{
-		Node* current = root;
-		while (current != nullptr)
-		{
-			if (k == current->key)
-				return true;
-			if (k < current->key)
-				current = current->left;
-			else
-				current = current->right;
-		}
-		return false;
-	}
-
-	bool Insert(const Key& k, const Value& v) {
-		
-		if (root == nullptr) {
-			root = new Node(k);
-			root->value = v;
-			return true;
-		}
-
-		Node* current = root;
-		Node* parent = nullptr;
-
-		while (current != nullptr) {
-			if (k == current->key) 
-				return false; 
-
-			parent = current;
-			if (k < current->key)
-				current = current->left;
-			else 
-				current = current->right;
-		}
-
-		Node* newNode = new Node(k);
-		newNode->value = v;
-		if (k < parent->key) parent->left = newNode;
-		else parent->right = newNode;
-
-		return true;
-	}
-
-	bool Remove(const Key& k) {
-		bool success = false;
-		root = RemoveNode(root, k, success);
-		return success;
 	}
 
 private:
@@ -199,15 +140,67 @@ private:
 		return newNode;
 	}
 
-	Node* RemoveNode(Node* node, const K& key, bool& success) {
+	Node* FindNodeHelper(const Key& k) const
+	{
+		Node* current = root;
+		while (corrent != nullptr)
+		{
+			if (k == corrent->key)
+				return corrent;
+
+			if (k < corrent->key)
+				corrent = corrent->left;
+			else
+				corrent = corrent->right;
+		}
+		return nullptr;
+	}
+
+	Node* InsertNodeHelper(const Key& k, bool& wasInserted) 
+	{
+		wasInserted = false;
+
+		if (root == nullptr)
+		{
+			root = new Node(k);
+			wasInserted = true;
+			return root;
+		}
+
+		Node* current = root;
+		Node* parent = nullptr;
+
+		while (current != nullptr)
+		{
+			if (k == current->key)
+				return current;
+			
+			parent = current;
+			if (k < current->key)
+				current = current->left;
+			else
+				current = current->right;
+		}
+
+		Node* newNode = new Node(k);
+		if (k < perent->key)
+			perent->left = newNode;
+		else
+			perent->right = newNode;
+
+		wasInserted = true;
+		return newNode;
+	}
+
+	Node* RemoveNode(Node* node, const Key& k, bool& success) {
 		if (node == nullptr)
 			return nullptr;
 
-		if (key < node->key) {
-			node->left = RemoveNode(node->left, key, success);
+		if (k < node->key) {
+			node->left = RemoveNode(node->left, k, success);
 		}
-		else if (key > node->key) {
-			node->right = RemoveNode(node->right, key, success);
+		else if (k > node->key) {
+			node->right = RemoveNode(node->right, k, success);
 		}
 		else {
 			success = true;
