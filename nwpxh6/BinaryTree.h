@@ -128,11 +128,11 @@ public:
 		return false;
 	}
 
-	bool Insert(const K& key, const V& value) {
+	bool Insert(const Key& k, const Value& v) {
 		
 		if (root == nullptr) {
-			root = new Node(key);
-			root->value = value;
+			root = new Node(k);
+			root->value = v;
 			return true;
 		}
 
@@ -140,25 +140,29 @@ public:
 		Node* parent = nullptr;
 
 		while (current != nullptr) {
-			if (key == current->key) 
+			if (k == current->key) 
 				return false; 
 
 			parent = current;
-			if (key < current->key)
+			if (k < current->key)
 				current = current->left;
 			else 
 				current = current->right;
 		}
 
-		Node* newNode = new Node(key);
-		newNode->value = value;
-		if (key < parent->key) parent->left = newNode;
+		Node* newNode = new Node(k);
+		newNode->value = v;
+		if (k < parent->key) parent->left = newNode;
 		else parent->right = newNode;
 
 		return true;
 	}
 
-
+	bool Remove(const Key& k) {
+		bool success = false;
+		root = RemoveNode(root, k, success);
+		return success;
+	}
 
 private:
 	struct Node
@@ -193,6 +197,40 @@ private:
 		newNode->left = CopyTree(other->left);
 		newNode->right = CopyTree(other->right);
 		return newNode;
+	}
+
+	Node* RemoveNode(Node* node, const K& key, bool& success) {
+		if (node == nullptr)
+			return nullptr;
+
+		if (key < node->key) {
+			node->left = RemoveNode(node->left, key, success);
+		}
+		else if (key > node->key) {
+			node->right = RemoveNode(node->right, key, success);
+		}
+		else {
+			success = true;
+
+			if (node->left == nullptr) {
+				Node* temp = node->right;
+				delete node;
+				return temp;
+			}
+			else if (node->right == nullptr) {
+				Node* temp = node->left;
+				delete node;
+				return temp;
+			}
+			Node* temp = node->right;
+			while (temp->left != nullptr) {
+				temp = temp->left;
+			}
+			node->key = temp->key;    
+			node->value = temp->value;
+			node->right = RemoveNode(node->right, temp->key, success);
+		}
+		return node;
 	}
 
 };
