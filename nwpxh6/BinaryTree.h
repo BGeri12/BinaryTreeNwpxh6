@@ -249,7 +249,74 @@ private:
 		StackNode* topNode;
 
 	public:
+		Stack() : topNode{nullptr} {}
 
+		~Stack() 
+		{
+			while (!IsEmpty()) 
+			{
+				Pop();
+			}
+		}
+
+		bool IsEmpty const() 
+		{
+			return topNode == nullptr;
+		}
+
+		void Pop() 
+		{
+			if (topNode != nullptr)
+			{
+				Node* temp = topNode;
+				topNode = topNode->next;
+				delete temp;
+			}
+		}
+
+		void Push(Node* node) 
+		{
+			StackNode* newNode = new StackNode(node);
+			newNode->next = topNode;
+			topNode = newNode;
+		}
+
+		Stack(const Stack& other) : topNode{ nullptr }
+		{
+			if (other.topNode != nullptr)
+			{
+				topNode = new StackNode(other.topNode->treeNode);
+				StackNode* currentOther = other.topNode->next;
+				StackNode* currentThis = topNode;
+				while (currentOther != nullptr)
+				{
+					currentThis->next = new StackNode(currentOther->treeNode);
+					currentThis = currentThis->next;
+					currentOther = currentOther->next;
+				}
+			}
+		}
+
+		Stack& operator=(const Stack& other)
+		{
+			if (this != &other) {
+				while (!isEmpty())
+					pop();
+				if (other.topNode != nullptr)
+				{
+					topNode = new StackNode(other.topNode->treeNode);
+					StackNode* currentThis = topNode;
+					StackNode* currentOther = other.topNode->next;
+					while (currentOther != nullptr)
+					{
+						currentThis->next = new StackNode(currentOther->treeNode);
+						currentThis = currentThis->next;
+						currentOther = currentOther->next;
+					}
+				}
+			}
+			return *this;
+		}
 	};
 
 };
