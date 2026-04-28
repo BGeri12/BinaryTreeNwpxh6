@@ -248,6 +248,26 @@ private:
 		};
 		StackNode* topNode;
 
+		void CopyFromHelper(const Stack& other)
+		{
+			if (other.topNode == nullptr)
+			{
+				topNode = nullptr;
+				return;
+			}
+
+			topNode = new StackNode(other.topNode->treeNode);
+			StackNode* currentThis = topNode;
+			StackNode* currentOther = other.topNode->next;
+
+			while (currentOther != nullptr)
+			{
+				currentThis->next = new StackNode(currentOther->treeNode);
+				currentThis = currentThis->next;
+				currentOther = currentOther->next;
+			}
+		}
+
 	public:
 		Stack() : topNode{nullptr} {}
 
@@ -281,39 +301,22 @@ private:
 			topNode = newNode;
 		}
 
-		Stack(const Stack& other) : topNode{ nullptr }
+		Stack(const Stack& other)
+		:topNode { nullptr }
 		{
-			if (other.topNode != nullptr)
-			{
-				topNode = new StackNode(other.topNode->treeNode);
-				StackNode* currentOther = other.topNode->next;
-				StackNode* currentThis = topNode;
-				while (currentOther != nullptr)
-				{
-					currentThis->next = new StackNode(currentOther->treeNode);
-					currentThis = currentThis->next;
-					currentOther = currentOther->next;
-				}
-			}
+			CopyFromHelper(other);
 		}
 
 		Stack& operator=(const Stack& other)
 		{
-			if (this != &other) {
-				while (!isEmpty())
-					pop();
-				if (other.topNode != nullptr)
+			if (this != &other)
+			{
+				while (!isEmpty()) 
 				{
-					topNode = new StackNode(other.topNode->treeNode);
-					StackNode* currentThis = topNode;
-					StackNode* currentOther = other.topNode->next;
-					while (currentOther != nullptr)
-					{
-						currentThis->next = new StackNode(currentOther->treeNode);
-						currentThis = currentThis->next;
-						currentOther = currentOther->next;
-					}
+					pop();
 				}
+
+				CopyFromHelper(other);
 			}
 			return *this;
 		}
