@@ -106,6 +106,7 @@ public:
 		root = nullptr;
 	}
 
+
 private:
 	struct Node
 	{
@@ -230,6 +231,26 @@ private:
 		}
 		return node;
 	}
+
+	class Stack 
+	{
+	private:
+		struct StackNode
+		{
+			Node* treeNode;
+			StackNode* next;
+			
+			StackNode(Node* node) 
+			:treeNode{ node }
+			,next{ nullptr }
+			{
+			}
+		};
+		StackNode* topNode;
+
+	public:
+
+	};
 
 };
 
