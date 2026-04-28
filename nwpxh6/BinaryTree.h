@@ -423,5 +423,22 @@ private:
 			return Iterator();
 		}
 
+		private:
+			void printInorder(Node* node, std::ostream& os) const
+			{
+				if (node != nullptr)
+				{
+					printInorder(node->left, os);
+					os << "[" << node->key << ": " << node->value << "] ";
+					printInorder(node->right, os);
+				}
+			}
+		public:
+			friend std::ostream& operator<<(std::ostream& os, const BinaryTree& tree) {
+				os << "{ ";
+				tree.printInorder(tree.root, os);
+				os << "}";
+				return os; 
+			}
 };
 

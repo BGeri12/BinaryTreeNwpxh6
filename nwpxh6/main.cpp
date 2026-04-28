@@ -28,6 +28,8 @@ int main()
 		{
 			std::cout << "Key: " << it.GetKey() << ", Value: " << *it << std::endl;
 		}
+		std::cout << "Listing the Tree using operator<<" << std::endl;
+		std::cout << tree << std::endl;
 
 		tree.Clear();
 		std::cout << "Is the tree empty after clearing? " << (tree.Empty() ? "Yes" : "No") << std::endl;
