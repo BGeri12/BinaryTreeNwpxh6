@@ -106,6 +106,32 @@ public:
 		root = nullptr;
 	}
 
+	class Iterator
+	{
+	public:
+		using iterator_category = std::forward_iterator_tag;
+		using value_type = Value;
+		using difference_type = std::ptrdiff_t;
+		using pointer = Value*;
+		using reference = Value&;
+
+
+	private:
+		Stack path;
+		Node* current;
+
+		void MoveToLeftMost(Node* node)
+		{
+			while (node != nullptr)
+			{
+				path.Push(node);
+				node = node->left;
+			}
+		}
+
+	public:
+
+	};
 
 private:
 	struct Node
