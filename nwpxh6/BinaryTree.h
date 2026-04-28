@@ -106,33 +106,6 @@ public:
 		root = nullptr;
 	}
 
-	class Iterator
-	{
-	public:
-		using iterator_category = std::forward_iterator_tag;
-		using value_type = Value;
-		using difference_type = std::ptrdiff_t;
-		using pointer = Value*;
-		using reference = Value&;
-
-
-	private:
-		Stack path;
-		Node* current;
-
-		void MoveToLeftMost(Node* node)
-		{
-			while (node != nullptr)
-			{
-				path.Push(node);
-				node = node->left;
-			}
-		}
-
-	public:
-
-	};
-
 private:
 	struct Node
 	{
@@ -305,16 +278,22 @@ private:
 			}
 		}
 
-		bool IsEmpty const() 
+		bool IsEmpty() 
 		{
 			return topNode == nullptr;
+		}
+
+		Node* Top() const
+		{
+			if (topNode != nullptr) return topNode->treeNode;
+			return nullptr;
 		}
 
 		void Pop() 
 		{
 			if (topNode != nullptr)
 			{
-				Node* temp = topNode;
+				StackNode* temp = topNode;
 				topNode = topNode->next;
 				delete temp;
 			}
@@ -337,9 +316,9 @@ private:
 		{
 			if (this != &other)
 			{
-				while (!isEmpty()) 
+				while (!IsEmpty()) 
 				{
-					pop();
+					Pop();
 				}
 
 				CopyFromHelper(other);
@@ -347,6 +326,102 @@ private:
 			return *this;
 		}
 	};
+
+	public:
+		class Iterator
+		{
+		public:
+			using iterator_category = std::forward_iterator_tag;
+			using value_type = Value;
+			using difference_type = std::ptrdiff_t;
+			using pointer = Value*;
+			using reference = Value&;
+
+		private:
+			Stack path;
+			Node* current;
+
+			void MoveToLeftMost(Node* node)
+			{
+				while (node != nullptr)
+				{
+					path.Push(node);
+					node = node->left;
+				}
+			}
+
+		public:
+			Iterator() : current{ nullptr } {}
+
+			Iterator(Node* root)
+			{
+				MoveToLeftMost(root);
+				current = path.IsEmpty() ? nullptr : path.Top();
+			}
+
+			reference operator*() const
+			{
+				return current->value;
+			}
+
+			reference& operator*()
+			{
+				return current->value;
+			}
+
+			const Key& GetKey() const
+			{
+				return current->key;
+			}
+
+			Iterator& operator++()
+			{
+				if (path.IsEmpty())
+				{
+					current = nullptr;
+					return *this;
+				}
+
+				Node* node = path.Top();
+				path.Pop();
+
+				if (node->right != nullptr)
+				{
+					MoveToLeftMost(node->right);
+				}
+
+				current = path.IsEmpty() ? nullptr : path.Top();
+				return *this;
+			}
+
+			Iterator operator++(int)
+			{
+				Iterator temp = *this;
+				++(*this);
+				return temp;
+			}
+
+			bool operator==(const Iterator& other) const
+			{
+				return current == other.current;
+			}
+
+			bool operator!=(const Iterator& other) const
+			{
+				return current != other.current;
+			}
+		};
+
+
+		Iterator Begin()
+		{
+			return Iterator(root);
+		}
+
+		Iterator End()
+		{
+			return Iterator();
+		}
 
 };
 

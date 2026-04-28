@@ -22,11 +22,26 @@ int main()
 		std::cout << "Removing key 20..." << std::endl;
 		tree.Remove(20);
 		std::cout << "Contains key 20 after removal? " << (tree.Contains(20) ? "Yes" : "No") << std::endl;
+		
+		std::cout << "Binary search tree content (Inorder)" << std::endl;
+		for (auto it = tree.Begin(); it != tree.End(); ++it)
+		{
+			std::cout << "Key: " << it.GetKey() << ", Value: " << *it << std::endl;
+		}
+
 		tree.Clear();
 		std::cout << "Is the tree empty after clearing? " << (tree.Empty() ? "Yes" : "No") << std::endl;
+	
+		std::cout << "Binary search tree content (Inorder)" << std::endl;
+		for (auto it = tree.Begin(); it != tree.End(); ++it)
+		{
+			std::cout << "Key: " << it.GetKey() << ", Value: " << *it << std::endl;
+		}
 	}
 	catch (const KeyNotFoundException& e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
+
+	
 }
