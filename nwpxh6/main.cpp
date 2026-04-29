@@ -1,20 +1,49 @@
-// nwpxh6.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include "BinaryTree.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	BinaryTree<int, std::string> tree;
+	tree.Insert(40, "Hello");
+	tree.Insert(20, "World");
+	tree.Insert(60, "Binary");
+	tree.Insert(12, "Tree");
+	tree.Insert(25, "Example");
+
+	try
+	{
+		std::cout << "Value for key 40: " << tree[40] << std::endl;
+		std::cout << "Value for key 20: " << tree[20] << std::endl;
+		std::cout << "Value for key 60: " << tree[60] << std::endl;
+		std::cout << "Value for key 12: " << tree[12] << std::endl;
+		std::cout << "Value for key 25: " << tree[25] << std::endl;
+		std::cout << "Contains key 30? " << (tree.Contains(30) ? "Yes" : "No") << std::endl;
+		std::cout << "Contains key 20? " << (tree.Contains(20) ? "Yes" : "No") << std::endl;
+		std::cout << "Removing key 20..." << std::endl;
+		tree.Remove(20);
+		std::cout << "Contains key 20 after removal? " << (tree.Contains(20) ? "Yes" : "No") << std::endl;
+		
+		std::cout << "Binary search tree content (Inorder)" << std::endl;
+		for (auto it = tree.Begin(); it != tree.End(); ++it)
+		{
+			std::cout << "Key: " << it.GetKey() << ", Value: " << *it << std::endl;
+		}
+		std::cout << "Listing the Tree using operator<<" << std::endl;
+		std::cout << tree << std::endl;
+
+		tree.Clear();
+		std::cout << "Is the tree empty after clearing? " << (tree.Empty() ? "Yes" : "No") << std::endl;
+	
+		std::cout << "Binary search tree content (Inorder)" << std::endl;
+		for (auto it = tree.Begin(); it != tree.End(); ++it)
+		{
+			std::cout << "Key: " << it.GetKey() << ", Value: " << *it << std::endl;
+		}
+	}
+	catch (const KeyNotFoundException& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+
+	
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
